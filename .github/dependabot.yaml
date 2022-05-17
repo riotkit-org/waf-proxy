@@ -9,3 +9,8 @@ updates:
     directory: "container-files/opt/build/entrypoint"
     schedule:
       interval: "weekly"
+
+  - package-ecosystem: "gomod"
+    directory: "container-files/opt/build/caddy"
+    schedule:
+      interval: "weekly"
