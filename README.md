@@ -5,11 +5,12 @@ Simple WAF reverse-proxy using Caddy and CORAZA WAF, contains few predefined but
 
 **Features:**
 - Configurable mapping of backends to domains
+- Contains embedded rulesets e.g. OWASP Core Ruleset, Wordpress-specific
 - Kubernetes and cloud native
 - Perfectly integrates with Wordpress and not only
-- Non-root container
+- Non-root container (running as `uid=65168`)
 - Real distroless container based on scratch **with only 2 binaries and few config files inside**
-- Developed purely in Golang, even entrypoint script was written in Golang instead of Bash
+- Developed purely in Golang, [even entrypoint script was written in Golang instead of Bash](container-files/opt/build/entrypoint/entrypoint.go)
 - (todo) Helm Chart for Kubernetes
 - (todo) Strict Pod Security Policy that should run on OpenShift
 
