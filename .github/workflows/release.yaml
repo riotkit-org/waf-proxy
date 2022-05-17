@@ -42,7 +42,7 @@ jobs:
 
             - name: Create docker meta
               id: meta
-              uses: docker/metadata-action@v3
+              uses: docker/metadata-action@v4
               with:
                   images: ghcr.io/riotkit-org/waf-proxy
 
