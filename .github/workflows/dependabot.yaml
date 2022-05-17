@@ -20,7 +20,7 @@ jobs:
               id: metadata
               uses: dependabot/fetch-metadata@v1.1.1
               with:
-                  github-token: "${{ secrets.GH_RW_TOKEN }}"
+                  github-token: "${{ secrets.GITHUB_TOKEN }}"
 
             - name: Merge Pull Request
               if: ${{steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
