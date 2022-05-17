@@ -115,6 +115,20 @@ with ModSecurity or compatible web application firewalls. The CRS aims to protec
 applications from a wide range of attacks, including the OWASP Top Ten, with a minimum of false alerts.
 ```
 
+Versioning
+----------
+
+Docker image tag contains a chained version information.
+
+**Example:**
+
+`waf-proxy:2.5.1-coraza-v1.2.0-bv1.0.0`
+
+**Explanation of this example:**
+- 2.5.1: Caddy server version
+- v1.2.0: CORAZA Caddy plugin version
+- v1.0.0: This repositry tag
+
 Autonomous image
 ----------------
 
