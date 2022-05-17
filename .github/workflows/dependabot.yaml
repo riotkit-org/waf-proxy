@@ -10,11 +10,11 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v3
 
-#            - name: Check if Dockerfile is building
-#              uses: docker/build-push-action@v3
-#              with:
-#                  context: .
-#                  push: false
+            - name: Check if Dockerfile is building
+              uses: docker/build-push-action@v3
+              with:
+                  context: .
+                  push: false
 
             - name: Dependabot metadata
               id: metadata
