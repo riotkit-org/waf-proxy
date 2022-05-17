@@ -11,7 +11,7 @@ FROM caddy:2.5.0-builder-alpine as xcaddy
 #
 # Hint: Bump Caddy version there
 # ============================================================================================================
-FROM caddy:2.5.1-alpine as caddy
+FROM caddy:2.5.0-alpine as caddy
 RUN caddy version | awk '{print $1}' > /caddy-version
 
 
