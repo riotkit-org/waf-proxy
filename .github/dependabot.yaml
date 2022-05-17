@@ -3,14 +3,19 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "monthly"
+        interval: "monthly"
 
   - package-ecosystem: "gomod"
     directory: "container-files/opt/build/entrypoint"
     schedule:
-      interval: "weekly"
+        interval: "weekly"
 
   - package-ecosystem: "gomod"
     directory: "container-files/opt/build/caddy"
     schedule:
-      interval: "weekly"
+        interval: "weekly"
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+        interval: "weekly"
