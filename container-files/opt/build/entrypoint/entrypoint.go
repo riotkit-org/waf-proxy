@@ -26,8 +26,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("ENABLE_RULE_WORDPRESS = %v", usesWordpressRules)
-
 	if usesWordpressRules {
 		if err := renderer.renderFile(wpFileSrc, wpFilePath); err != nil {
 			log.Fatalf("Cannot render Wordpress Ruleset: %v", err)

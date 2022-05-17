@@ -57,7 +57,7 @@ RUN wget -q https://github.com/coreruleset/coreruleset/archive/refs/tags/v3.3.2.
 # -----------------------------------------------------------------------------------------------
 ADD container-files/opt/build/entrypoint /opt/build/entrypoint
 RUN cd /opt/build/entrypoint && make build install
-RUN mkdir -p /tmp && touch /etc/caddy/Caddyfile /tmp/.keep && chown 65168:65168 /etc/caddy/Caddyfile /tmp/.keep
+RUN mkdir -p /tmp && touch /etc/caddy/Caddyfile /tmp/.keep /etc/caddy/rules/wordpress/rules.conf && chown 65168:65168 /etc/caddy/Caddyfile /tmp/.keep /etc/caddy/rules/wordpress/rules.conf
 
 
 # ===========================================================================================
