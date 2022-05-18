@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/flosch/pongo2/v5"
 	"github.com/pkg/errors"
 	"log"
