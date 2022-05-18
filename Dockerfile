@@ -3,7 +3,7 @@
 #
 # Hint: Bump Xcaddy there
 # ===========================================================================
-FROM caddy:2.5.0-builder-alpine as xcaddy
+FROM caddy:2.5.1-builder-alpine as xcaddy
 
 
 # ============================================================================================================
@@ -20,7 +20,7 @@ RUN caddy version | awk '{print $1}' > /caddy-version
 #
 # Hint: Bump Golang version there
 # ================================================================
-FROM golang:1.18.2-alpine as builder
+FROM golang:1.18.0-alpine as builder
 
 RUN apk add --update make
 
