@@ -1,4 +1,4 @@
-WAF Proxy test
+WAF Proxy test2
 =========
 
 Simple WAF reverse-proxy using Caddy and CORAZA WAF, contains few predefined but customizable rulesets
