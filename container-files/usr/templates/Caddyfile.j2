@@ -4,7 +4,7 @@
 }
 
 {% for upstream in upstreams %}
-http://{{ upstream.Hostname }} {
+http://{{ upstream.Hostname }}:{{ CADDY_PORT }} {
 	coraza_waf {
 	    {% if ENABLE_RULE_WORDPRESS %}
         include /etc/caddy/rules/wordpress/rules.conf

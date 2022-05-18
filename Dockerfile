@@ -77,7 +77,8 @@ ENV ENABLE_RULE_WORDPRESS=false \
     WP_ENABLE_USER_ENUMERATION=false \
     WP_ENABLE_DOS_PROTECTION=true \
     OWN_CADDYFILE=false \
-    DEBUG=false
+    DEBUG=false \
+    CADDY_PORT=8090
 
 # templates are rendered on entrypoint execution depending on environment variables provided by user
 COPY container-files/usr/templates /usr/templates
@@ -94,4 +95,6 @@ RUN ["/usr/bin/entrypoint", "/usr/bin/caddy", "validate", "-config", "/etc/caddy
 
 USER 65168
 CMD ["/usr/bin/caddy", "run", "-pidfile", "/tmp/pid", "-config", "/etc/caddy/Caddyfile"]
+
+EXPOSE 8090
 ENTRYPOINT ["/usr/bin/entrypoint"]
