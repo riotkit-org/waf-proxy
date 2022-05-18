@@ -4,30 +4,9 @@ on:
     pull_request_target:
 
 jobs:
-    test:
-        runs-on: ubuntu-20.04
-        if: ${{ github.actor != 'dependabot[bot]' }}
-        steps:
-            - name: Dump GitHub context
-              env:
-                  GITHUB_CONTEXT: ${{ toJson(github) }}
-              run: echo "$GITHUB_CONTEXT"
-
-            - name: Checkout
-              uses: actions/checkout@v3
-              with:
-                  ref: ${{ github.event.pull_request.head.sha }}
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Check if Dockerfile is building
-              uses: docker/build-push-action@v3
-              with:
-                  context: .
-                  push: false
-
     auto-merge:
         runs-on: ubuntu-20.04
-        if: ${{ github.actor == 'dependabot[bot]' && github.repository_owner == 'riotkit-org' }}
+        if: ${{ github.actor == 'dependabot[bot]' && github.event.pull_request.head.repo.fork == false }}
         permissions:
             issues: write
             pull-requests: write
