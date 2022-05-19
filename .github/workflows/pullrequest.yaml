@@ -17,4 +17,8 @@ jobs:
               uses: docker/build-push-action@v3
               with:
                   context: .
+                  tags: "waf-proxy"
                   push: false
+
+            - name: Test image
+              run: "make test IMAGE=waf-proxy"

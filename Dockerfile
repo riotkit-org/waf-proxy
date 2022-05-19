@@ -11,7 +11,8 @@ FROM caddy:2.5.1-builder-alpine as xcaddy
 #
 # Hint: Bump Caddy version there
 # ============================================================================================================
-FROM caddy:2.5.1-builder-alpine as caddy
+FROM docker.io/caddy:2.5.1-alpine as caddy
+RUN command -v caddy
 RUN caddy version | awk '{print $1}' > /caddy-version
 
 
@@ -57,7 +58,9 @@ RUN wget -q https://github.com/coreruleset/coreruleset/archive/refs/tags/v3.3.2.
 # -----------------------------------------------------------------------------------------------
 ADD container-files/opt/build/entrypoint /opt/build/entrypoint
 RUN cd /opt/build/entrypoint && make build install
-RUN mkdir -p /tmp && touch /etc/caddy/Caddyfile /tmp/.keep /etc/caddy/rules/wordpress/rules.conf && chown 65168:65168 /etc/caddy/Caddyfile /tmp/.keep /etc/caddy/rules/wordpress/rules.conf
+RUN mkdir -p /tmp /.config /.config/caddy \
+    && touch /etc/caddy/Caddyfile /tmp/.pid /etc/caddy/rules/wordpress/rules.conf \
+    && chown -R 65168:65168 /etc/caddy/Caddyfile /tmp /etc/caddy/rules/wordpress/ /etc/caddy/rules/wordpress/rules.conf /.config
 
 
 # ===========================================================================================
@@ -84,7 +87,9 @@ ENV ENABLE_RULE_WORDPRESS=false \
 COPY container-files/usr/templates /usr/templates
 
 # required for storing /tmp/pid file
-COPY --from=builder /tmp/.keep /tmp/.keep
+COPY --from=builder /tmp /tmp
+# autosave directory
+COPY --from=builder /.config /.config
 # builder has already fetched and unpacked rulesets from external sources
 COPY --from=builder /etc/caddy /etc/caddy
 COPY --from=builder /usr/bin/entrypoint /usr/bin/entrypoint
@@ -94,7 +99,7 @@ COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 RUN ["/usr/bin/entrypoint", "/usr/bin/caddy", "validate", "-config", "/etc/caddy/Caddyfile"]
 
 USER 65168
-CMD ["/usr/bin/caddy", "run", "-pidfile", "/tmp/pid", "-config", "/etc/caddy/Caddyfile"]
+CMD ["/usr/bin/caddy", "run", "-pidfile", "/tmp/.pid", "-config", "/etc/caddy/Caddyfile"]
 
 EXPOSE 8090
 ENTRYPOINT ["/usr/bin/entrypoint"]

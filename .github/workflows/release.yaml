@@ -56,13 +56,19 @@ jobs:
               run: |
                   echo "::set-output name=TAG::$(./ci-create-docker-tag.sh)"
 
-            - name: Build and release docker
+            - name: Build image
               uses: docker/build-push-action@v3
               with:
                   context: .
-                  push: ${{ github.event_name != 'pull_request' }}
+                  push: false
                   tags: "ghcr.io/riotkit-org/waf-proxy:${{ steps.tag.outputs.TAG }}"
                   labels: ${{ steps.meta.outputs.labels }}
+
+            - name: Test image
+              run: "make test IMAGE=ghcr.io/riotkit-org/waf-proxy:${{ steps.tag.outputs.TAG }}"
+
+            - name: Push image
+              run: "docker push ghcr.io/riotkit-org/waf-proxy:${{ steps.tag.outputs.TAG }}"
 
 #    release-chart:
 #        runs-on: ubuntu-20.04

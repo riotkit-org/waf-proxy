@@ -23,7 +23,11 @@ jobs:
               with:
                   context: .
                   push: false
+                  tags: "waf-proxy"
                   github-token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Test image
+              run: "make test IMAGE=waf-proxy"
 
             - name: Dependabot metadata
               id: metadata
