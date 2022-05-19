@@ -60,7 +60,7 @@ ADD container-files/opt/build/entrypoint /opt/build/entrypoint
 RUN cd /opt/build/entrypoint && make build install
 RUN mkdir -p /tmp /.config /.config/caddy \
     && touch /etc/caddy/Caddyfile /tmp/.pid /etc/caddy/rules/wordpress/rules.conf \
-    && chown -R 65168:65168 /etc/caddy/Caddyfile /tmp /etc/caddy/rules/wordpress/ /etc/caddy/rules/wordpress/rules.conf /.config
+    && chown -R 65161:65161 /etc/caddy/Caddyfile /tmp /etc/caddy/rules/wordpress/ /etc/caddy/rules/wordpress/rules.conf /.config
 
 
 # ===========================================================================================
@@ -98,7 +98,7 @@ COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 # pre-validate default configuration
 RUN ["/usr/bin/entrypoint", "/usr/bin/caddy", "validate", "-config", "/etc/caddy/Caddyfile"]
 
-USER 65168
+USER 65161
 CMD ["/usr/bin/caddy", "run", "-pidfile", "/tmp/.pid", "-config", "/etc/caddy/Caddyfile"]
 
 EXPOSE 8090
