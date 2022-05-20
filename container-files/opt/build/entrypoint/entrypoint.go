@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/flosch/pongo2/v5"
 	"github.com/pkg/errors"
 	"log"
@@ -105,8 +106,16 @@ func (r *renderer) populateUpstreams(environ []string) error {
 	for _, env := range environ {
 		pair := strings.SplitN(env, "=", 2)
 
+		if r.debug {
+			fmt.Println("DEBUG: Checking environment variable if is upstream", env)
+		}
+
 		if strings.Contains(pair[0], "UPSTREAM_") {
 			upstream := &Upstream{}
+
+			if r.debug {
+				fmt.Println("DEBUG: Creating upstream from ", env)
+			}
 
 			err := json.Unmarshal([]byte(pair[1]), upstream)
 			if err != nil {
@@ -114,7 +123,15 @@ func (r *renderer) populateUpstreams(environ []string) error {
 			}
 
 			upstreams = append(r.upstreams, *upstream)
+		} else {
+			if r.debug {
+				fmt.Println("DEBUG: not an upstream", env)
+			}
 		}
+	}
+
+	if len(upstreams) == 0 {
+		return errors.New("No upstream defined. Create environment variables e.g. UPSTREAM_1, UPSTREAM_2 and assign them a JSON with pass_to and hostname keys")
 	}
 
 	r.upstreams = upstreams
