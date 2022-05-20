@@ -22,10 +22,10 @@ func main() {
 	usesWordpressRules := getEnv("ENABLE_RULE_WORDPRESS", false).(bool)
 	debug := getEnv("DEBUG", false).(bool)
 	renderer := renderer{debug: debug}
-	renderer.buildPongoContext()
 	if err := renderer.populateUpstreams(os.Environ()); err != nil {
 		log.Fatal(err)
 	}
+	renderer.buildPongoContext()
 
 	if usesWordpressRules {
 		if err := renderer.renderFile(wpFileSrc, wpFilePath); err != nil {
@@ -67,10 +67,8 @@ func (r *renderer) renderFile(sourcePath string, targetPath string) error {
 		return errors.Wrapf(err, "Cannot parse file '%v'", sourcePath)
 	}
 
-	if r.debug {
-		log.Println(targetPath + ":")
-		log.Println(out)
-	}
+	r.printDebug(targetPath + ":")
+	r.printDebug(out)
 
 	if err := os.WriteFile(targetPath, []byte(out), os.FileMode(0755)); err != nil {
 		return errors.Wrapf(err, "Cannot write into file %v", targetPath)
@@ -91,10 +89,7 @@ func (r *renderer) buildPongoContext() {
 	// all collected upstreams are internally objects
 	ctx["upstreams"] = r.upstreams
 
-	if r.debug {
-		log.Println("Context:")
-		log.Println(ctx)
-	}
+	r.printDebug("Context:", ctx)
 
 	r.ctx = ctx
 }
@@ -105,17 +100,16 @@ func (r *renderer) populateUpstreams(environ []string) error {
 	// collect upstream configuration
 	for _, env := range environ {
 		pair := strings.SplitN(env, "=", 2)
-
-		if r.debug {
-			fmt.Println("DEBUG: Checking environment variable if is upstream", env)
-		}
+		r.printDebug("DEBUG: Checking environment variable if is upstream", env)
 
 		if strings.Contains(pair[0], "UPSTREAM_") {
+			if pair[1] == "" {
+				continue
+			}
+
 			upstream := &Upstream{}
 
-			if r.debug {
-				fmt.Println("DEBUG: Creating upstream from ", env)
-			}
+			r.printDebug("DEBUG: Creating upstream from ", env)
 
 			err := json.Unmarshal([]byte(pair[1]), upstream)
 			if err != nil {
@@ -124,9 +118,7 @@ func (r *renderer) populateUpstreams(environ []string) error {
 
 			upstreams = append(r.upstreams, *upstream)
 		} else {
-			if r.debug {
-				fmt.Println("DEBUG: not an upstream", env)
-			}
+			r.printDebug("DEBUG: not an upstream", env)
 		}
 	}
 
@@ -136,6 +128,12 @@ func (r *renderer) populateUpstreams(environ []string) error {
 
 	r.upstreams = upstreams
 	return nil
+}
+
+func (r *renderer) printDebug(text ...interface{}) {
+	if r.debug {
+		fmt.Println(text...)
+	}
 }
 
 func getEnv(name string, defaultValue interface{}) interface{} {
