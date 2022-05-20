@@ -19,7 +19,8 @@ const wpFilePath = "/etc/caddy/rules/wordpress/rules.conf"
 func main() {
 	usesOwnCaddyfile := getEnv("OWN_CADDYFILE", false).(bool)
 	usesWordpressRules := getEnv("ENABLE_RULE_WORDPRESS", false).(bool)
-	renderer := renderer{}
+	debug := getEnv("DEBUG", false).(bool)
+	renderer := renderer{debug: debug}
 	renderer.buildPongoContext()
 	if err := renderer.populateUpstreams(); err != nil {
 		log.Fatal(err)
@@ -55,6 +56,7 @@ func main() {
 type renderer struct {
 	upstreams []Upstream
 	ctx       pongo2.Context
+	debug     bool
 }
 
 func (r *renderer) renderFile(sourcePath string, targetPath string) error {
@@ -66,6 +68,11 @@ func (r *renderer) renderFile(sourcePath string, targetPath string) error {
 	out, err := template.Execute(r.ctx)
 	if err != nil {
 		return errors.Wrapf(err, "Cannot parse file '%v'", sourcePath)
+	}
+
+	if r.debug {
+		log.Println(targetPath + ":")
+		log.Println(out)
 	}
 
 	if err := os.WriteFile(targetPath, []byte(out), os.FileMode(0755)); err != nil {
@@ -86,6 +93,11 @@ func (r *renderer) buildPongoContext() {
 
 	// all collected upstreams are internally objects
 	ctx["upstreams"] = r.upstreams
+
+	if r.debug {
+		log.Println("Context:")
+		log.Println(ctx)
+	}
 
 	r.ctx = ctx
 }
