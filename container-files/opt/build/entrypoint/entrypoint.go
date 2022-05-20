@@ -22,7 +22,7 @@ func main() {
 	debug := getEnv("DEBUG", false).(bool)
 	renderer := renderer{debug: debug}
 	renderer.buildPongoContext()
-	if err := renderer.populateUpstreams(); err != nil {
+	if err := renderer.populateUpstreams(os.Environ()); err != nil {
 		log.Fatal(err)
 	}
 
@@ -60,10 +60,6 @@ type renderer struct {
 }
 
 func (r *renderer) renderFile(sourcePath string, targetPath string) error {
-	if err := r.populateUpstreams(); err != nil {
-		return err
-	}
-
 	template := pongo2.Must(pongo2.FromFile(caddyFileSrc))
 	out, err := template.Execute(r.ctx)
 	if err != nil {
@@ -102,10 +98,13 @@ func (r *renderer) buildPongoContext() {
 	r.ctx = ctx
 }
 
-func (r *renderer) populateUpstreams() error {
+func (r *renderer) populateUpstreams(environ []string) error {
+	var upstreams []Upstream
+
 	// collect upstream configuration
-	for _, env := range os.Environ() {
+	for _, env := range environ {
 		pair := strings.SplitN(env, "=", 2)
+
 		if strings.Contains(pair[0], "UPSTREAM_") {
 			upstream := &Upstream{}
 
@@ -114,9 +113,11 @@ func (r *renderer) populateUpstreams() error {
 				return errors.Wrapf(err, "Cannot parse upstream configuration from: %v", env)
 			}
 
-			r.upstreams = append(r.upstreams, *upstream)
+			upstreams = append(r.upstreams, *upstream)
 		}
 	}
+
+	r.upstreams = upstreams
 	return nil
 }
 
