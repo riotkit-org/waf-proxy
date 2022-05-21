@@ -7,28 +7,28 @@
 http://{{ upstream.Hostname }}:{{ CADDY_PORT }} {
 	coraza_waf {
 	    {% if ENABLE_RULE_WORDPRESS %}
-        include /etc/caddy/rules/wordpress/rules.conf
-        include /etc/caddy/rules/wordpress/shared/02-INITIALIZATION.conf
-        include /etc/caddy/rules/wordpress/shared/03-BRUTEFORCE.conf
-        include /etc/caddy/rules/wordpress/shared/04-EVENTS.conf
-        include /etc/caddy/rules/wordpress/shared/crs-attacks.conf
+            #include /etc/caddy/rules/wordpress/rules.conf
+            #include /etc/caddy/rules/wordpress/shared/02-INITIALIZATION.conf
+            #include /etc/caddy/rules/wordpress/shared/03-BRUTEFORCE.conf
+            #include /etc/caddy/rules/wordpress/shared/04-EVENTS.conf
+            include /etc/caddy/rules/wordpress/shared/crs-attacks.conf
 
-        {% if WP_HARDENED %}
-        include /etc/caddy/rules/wordpress/shared/05-HARDENING.conf
-        {% endif %}
+            {% if WP_HARDENED %}
+            #include /etc/caddy/rules/wordpress/shared/05-HARDENING.conf
+            {% endif %}
 
 	    {% endif %}
 
         {% if ENABLE_RULE_CORAZA_RECOMMENDED %}
-        include /etc/caddy/rules/coraza-recommended/*.conf
+            include /etc/caddy/rules/coraza-recommended/*.conf
         {% endif %}
 
         {% if ENABLE_RULE_RIOTKIT_ORG_BASIC %}
-        include /etc/caddy/rules/riotkit-org-basic/*.conf
+            include /etc/caddy/rules/riotkit-org-basic/*.conf
         {% endif %}
 
         {% if ENABLE_CRS %}
-        include /etc/caddy/rules/owasp-crs/*.conf
+            include /etc/caddy/rules/owasp-crs/*.conf
         {% endif %}
 	}
 	reverse_proxy {{ upstream.PassTo }}
