@@ -61,7 +61,7 @@ type renderer struct {
 }
 
 func (r *renderer) renderFile(sourcePath string, targetPath string) error {
-	template := pongo2.Must(pongo2.FromFile(caddyFileSrc))
+	template := pongo2.Must(pongo2.FromFile(sourcePath))
 	out, err := template.Execute(r.ctx)
 	if err != nil {
 		return errors.Wrapf(err, "Cannot parse file '%v'", sourcePath)
