@@ -17,7 +17,7 @@ test_crs:
 	docker run --rm --name waf-proxy \
 		-e UPSTREAM_1='{"pass_to": "my-service.default.svc.cluster.local", "hostname": "example.org"}' \
 		-e ENABLE_CRS=true \
-		-e DEBUG=true \
+		-e DEBUG=false \
         ${IMAGE} caddy validate -config /etc/caddy/Caddyfile
 
 test_no_upstreams:

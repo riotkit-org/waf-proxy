@@ -17,9 +17,13 @@ const caddyFilePath = "/etc/caddy/Caddyfile"
 const wpFileSrc = "/usr/templates/wp-rules.conf.j2"
 const wpFilePath = "/etc/caddy/rules/wordpress/rules.conf"
 
+const crsFileSrc = "/usr/templates/crs-rules.conf.j2"
+const crsFilePath = "/etc/caddy/rules/owasp-crs/configured.conf"
+
 func main() {
 	usesOwnCaddyfile := getEnv("OWN_CADDYFILE", false).(bool)
 	usesWordpressRules := getEnv("ENABLE_RULE_WORDPRESS", false).(bool)
+	useCRSRules := getEnv("ENABLE_CRS", false).(bool)
 	debug := getEnv("DEBUG", false).(bool)
 	renderer := renderer{debug: debug}
 	if err := renderer.populateUpstreams(os.Environ()); err != nil {
@@ -30,6 +34,11 @@ func main() {
 	if usesWordpressRules {
 		if err := renderer.renderFile(wpFileSrc, wpFilePath); err != nil {
 			log.Fatalf("Cannot render Wordpress Ruleset: %v", err)
+		}
+	}
+	if useCRSRules {
+		if err := renderer.renderFile(crsFileSrc, crsFilePath); err != nil {
+			log.Fatalf("Cannot render CRS Ruleset: %v", err)
 		}
 	}
 
