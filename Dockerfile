@@ -98,8 +98,6 @@ COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 # pre-validate default configuration
 
 
-USER 65161
-
 # <testing configuration>
 ENV UPSTREAM_VALIDATION_TEST="{\"pass_to\": \"http://127.0.0.1:8080\", \"hostname\": \"example.org\"}" \
     DEBUG=true
@@ -108,6 +106,7 @@ ENV UPSTREAM_VALIDATION_TEST="" \
     DEBUG=false
 # </testing configuration>
 
+USER 65161
 CMD ["/usr/bin/caddy", "run", "-pidfile", "/tmp/.pid", "-config", "/etc/caddy/Caddyfile"]
 
 # health check
