@@ -19,11 +19,28 @@ Simple WAF reverse-proxy using Caddy and CORAZA WAF, contains few predefined but
 Configuration reference
 -----------------------
 
+### Picking a version
+
+We recommend you to pick a versioned release, snapshot version is only for testing for contributors.
+
+List of versions you can find always there: https://github.com/riotkit-org/waf-proxy/pkgs/container/waf-proxy
+
+```bash
+docker pull ghcr.io/riotkit-org/waf-proxy:{select-your-version}
+```
+
+### Exposed ports
+
+- 8081: Health check at `/` endpoint
+- 8090: Proxied upstreams through WAF, HTTP port
+- 2019: Metrics
+
 ### Directory structure
 
 - `/etc/caddy/rules/coraza-recommended`
 - `/etc/caddy/rules/riotit-org-basic`
 - `/etc/caddy/rules/wordpress`
+- `/etc/caddy/rules/owasp-crs`
 
 To add specific rules mount a docker volume or Kubernetes ConfigMap at `/etc/caddy/rules/custom/rules.conf`
 
@@ -33,13 +50,14 @@ To add specific rules mount a docker volume or Kubernetes ConfigMap at `/etc/cad
 #
 # Upstreams
 #
-UPSTREAM_1: '{"pass_to": "my-service.default.svc.cluster.local", "hostname": "wordpress.org"}'
+UPSTREAM_1: '{"pass_to": "http://my-service.default.svc.cluster.local", "hostname": "wordpress.org"}'
 UPSTREAM_2: '...'
 UPSTREAM_...: '...'
 
 # to disable generation of Caddyfile you can set this variable to 'true' and mount Caddyfile under "/etc/caddy/Caddyfile"
 # you can also still use it with 'false' with a custom template mounted under "/etc/caddy/Caddyfile.j2"
 OWN_CADDYFILE: false
+DEBUG: false  # enable extra verbosity, configuration printing to stdout
 
 #
 # Wordpress specific rules

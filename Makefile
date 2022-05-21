@@ -1,4 +1,5 @@
 IMAGE=waf-proxy
+SHELL=/bin/bash
 
 build:
 	docker build . -t ${IMAGE}
