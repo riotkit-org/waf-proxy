@@ -3,6 +3,9 @@ WAF Proxy
 
 [![Test and release](https://github.com/riotkit-org/waf-proxy/actions/workflows/release.yaml/badge.svg)](https://github.com/riotkit-org/waf-proxy/actions/workflows/release.yaml)
 
+Notice: This container is still a WORK IN PROGRESS
+--------------------------------------------------
+
 Simple WAF reverse-proxy using Caddy and CORAZA WAF, contains few predefined but customizable rulesets
 
 **Features:**
