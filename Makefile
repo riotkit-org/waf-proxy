@@ -21,7 +21,8 @@ test_crs:
 
 test_no_upstreams:
 	docker run --rm --name waf-proxy \
-        ${IMAGE} caddy validate -config /etc/caddy/Caddyfile
+        ${IMAGE} caddy validate -config /etc/caddy/Caddyfile; \
+    [[ "$$?" == "1" ]] || (echo "Validation should fail due to missing upstreams definition" && exit 1)
 
 test_wp:
 	docker run --rm --name waf-proxy \
