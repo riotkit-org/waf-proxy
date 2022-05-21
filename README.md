@@ -1,6 +1,8 @@
 WAF Proxy
 =========
 
+[![Test and release](https://github.com/riotkit-org/waf-proxy/actions/workflows/release.yaml/badge.svg)](https://github.com/riotkit-org/waf-proxy/actions/workflows/release.yaml)
+
 Simple WAF reverse-proxy using Caddy and CORAZA WAF, contains few predefined but customizable rulesets
 
 **Features:**
@@ -10,6 +12,7 @@ Simple WAF reverse-proxy using Caddy and CORAZA WAF, contains few predefined but
 - Perfectly integrates with Wordpress and not only
 - Non-root container (running as `uid=65161`)
 - Real [distroless image based on scratch](https://hub.docker.com/_/scratch) **with only 2 binaries and few config files inside**
+- Image is scanned for vulnerabilities on each release using Trivy Scanner
 - Developed purely in Golang, [even entrypoint script was written in Golang instead of Bash](container-files/opt/build/entrypoint/entrypoint.go)
 - Autonomous image, actively maintained by [Dependabot](https://github.com/dependabot) ;-)
 - (todo) Helm Chart for Kubernetes

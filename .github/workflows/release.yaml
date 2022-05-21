@@ -67,6 +67,12 @@ jobs:
             - name: Test image
               run: "make test IMAGE=ghcr.io/riotkit-org/waf-proxy:${{ steps.tag.outputs.TAG }}"
 
+            - name: Scan image
+              uses: aquasecurity/trivy-action@0.3.0
+              with:
+                  image-ref: "ghcr.io/riotkit-org/waf-proxy:${{ steps.tag.outputs.TAG }}"
+                  format: 'table'
+
             - name: Push image
               run: "docker push ghcr.io/riotkit-org/waf-proxy:${{ steps.tag.outputs.TAG }}"
 

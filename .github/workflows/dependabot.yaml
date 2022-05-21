@@ -29,6 +29,12 @@ jobs:
             - name: Test image
               run: "make test IMAGE=waf-proxy"
 
+            - name: Scan image
+              uses: aquasecurity/trivy-action@0.3.0
+              with:
+                  image-ref: "ghcr.io/riotkit-org/waf-proxy:${{ steps.tag.outputs.TAG }}"
+                  format: 'table'
+
             - name: Dependabot metadata
               id: metadata
               uses: dependabot/fetch-metadata@v1.3.1
