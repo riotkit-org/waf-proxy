@@ -109,5 +109,12 @@ ENV UPSTREAM_VALIDATION_TEST="" \
 # </testing configuration>
 
 CMD ["/usr/bin/caddy", "run", "-pidfile", "/tmp/.pid", "-config", "/etc/caddy/Caddyfile"]
+
+# health check
+EXPOSE 8081
+# http
 EXPOSE 8090
+# metrics
+EXPOSE 2019
+
 ENTRYPOINT ["/usr/bin/entrypoint"]

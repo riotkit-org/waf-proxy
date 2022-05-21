@@ -1,4 +1,5 @@
 {
+    admin off
     auto_https off
     order coraza_waf first
 }
@@ -34,3 +35,14 @@ http://{{ upstream.Hostname }}:{{ CADDY_PORT }} {
 	reverse_proxy {{ upstream.PassTo }}
 }
 {% endfor %}
+
+# ======================
+# Health check endpoint
+# ======================
+http://0.0.0.0:8081 {
+    respond "OK Riotkit!"
+}
+
+:2019 {
+	metrics /metrics
+}
