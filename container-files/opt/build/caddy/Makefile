@@ -9,4 +9,6 @@ install:
 build:
 	set -xe; \
 	CORAZA_VERSION=$$(cat go.sum |grep "github.com/corazawaf/coraza-caddy" |grep -v "go.mod" | awk '{print $$2}'); \
-	xcaddy build ${CADDY_VERSION} --output /usr/bin/caddy --with github.com/corazawaf/coraza-caddy@$${CORAZA_VERSION}
+	xcaddy build ${CADDY_VERSION} --output /usr/bin/caddy \
+		--with github.com/corazawaf/coraza-caddy@$${CORAZA_VERSION} \
+		--with github.com/mholt/caddy-ratelimit

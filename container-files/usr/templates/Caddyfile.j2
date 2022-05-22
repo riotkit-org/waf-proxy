@@ -2,12 +2,14 @@
     admin off
     auto_https off
     order coraza_waf first
+    order rate_limit before basicauth
 }
 
 {% for upstream in upstreams %}
 http://{{ upstream.Hostname }}:{{ CADDY_PORT }} {
+    {%- if ENABLE_CORAZA_WAF %}
 	coraza_waf {
-	    {% if ENABLE_RULE_WORDPRESS %}
+	    {%- if ENABLE_RULE_WORDPRESS %}
             #include /etc/caddy/rules/wordpress/rules.conf
             #include /etc/caddy/rules/wordpress/shared/02-INITIALIZATION.conf
             #include /etc/caddy/rules/wordpress/shared/03-BRUTEFORCE.conf
@@ -18,20 +20,38 @@ http://{{ upstream.Hostname }}:{{ CADDY_PORT }} {
             #include /etc/caddy/rules/wordpress/shared/05-HARDENING.conf
             {% endif %}
 
-	    {% endif %}
+	    {% endif -%}
 
-        {% if ENABLE_RULE_CORAZA_RECOMMENDED %}
+        {%- if ENABLE_RULE_CORAZA_RECOMMENDED %}
             include /etc/caddy/rules/coraza-recommended/*.conf
-        {% endif %}
+        {% endif -%}
 
-        {% if ENABLE_RULE_RIOTKIT_ORG_BASIC %}
+        {%- if ENABLE_RULE_RIOTKIT_ORG_BASIC %}
             include /etc/caddy/rules/riotkit-org-basic/*.conf
-        {% endif %}
+        {% endif -%}
 
         {% if ENABLE_CRS %}
             include /etc/caddy/rules/owasp-crs/*.conf
         {% endif %}
+
+        # mount your volume/configmap there
+        include /etc/caddy/rules/custom.conf
 	}
+	{% endif %}
+
+	{%- if ENABLE_RATE_LIMITER %}
+	rate_limit {
+        zone by_ip_address {
+            key    {remote_host}
+            events {{ RATE_LIMIT_EVENTS }}
+            window {{ RATE_LIMIT_WINDOW }}
+        }
+    }
+    {% endif -%}
+
+    {%- if ENABLE_CUSTOM_UPSTREAM_CONF %}
+	import /etc/caddy/custom-upstream.conf
+	{% endif -%}
 	reverse_proxy {{ upstream.PassTo }}
 }
 {% endfor %}

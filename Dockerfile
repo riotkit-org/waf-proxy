@@ -59,8 +59,8 @@ RUN wget -q https://github.com/coreruleset/coreruleset/archive/refs/tags/v4.0.0-
 # Fix permissions
 # ---------------
 RUN mkdir -p /tmp /.config /.config/caddy \
-    && touch /etc/caddy/Caddyfile /tmp/.pid /etc/caddy/rules/wordpress/rules.conf /etc/caddy/rules/owasp-crs/configured.conf \
-    && chown -R 65161:65161 /etc/caddy/Caddyfile /tmp /etc/caddy/rules/ /.config
+    && touch /etc/caddy/Caddyfile /tmp/.pid /etc/caddy/rules/wordpress/rules.conf /etc/caddy/rules/owasp-crs/configured.conf /etc/caddy/rules/custom.conf /etc/caddy/custom-upstream.conf \
+    && chown -R 65161:65161 /tmp /etc/caddy /.config
 
 
 # ===========================================================================================
@@ -79,7 +79,11 @@ ENV ENABLE_RULE_WORDPRESS=false \
     WP_ENABLE_XMLRPC=false \
     WP_ENABLE_USER_ENUMERATION=false \
     WP_ENABLE_DOS_PROTECTION=true \
+    ENABLE_CORAZA_WAF=true \
     ENABLE_CRS=false \
+    ENABLE_RATE_LIMITER=false \
+    RATE_LIMIT_EVENTS=30 \
+    RATE_LIMIT_WINDOW=5s \
     OWN_CADDYFILE=false \
     DEBUG=false \
     CADDY_PORT=8090

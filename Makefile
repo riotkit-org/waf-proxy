@@ -17,7 +17,15 @@ test_crs:
 	docker run --rm --name waf-proxy \
 		-e UPSTREAM_1='{"pass_to": "my-service.default.svc.cluster.local", "hostname": "example.org"}' \
 		-e ENABLE_CRS=true \
-		-e DEBUG=false \
+		-e DEBUG=true \
+        ${IMAGE} caddy validate -config /etc/caddy/Caddyfile
+
+test_rate_limiter:
+	docker run --rm --name waf-proxy \
+		-e UPSTREAM_1='{"pass_to": "my-service.default.svc.cluster.local", "hostname": "example.org"}' \
+		-e ENABLE_CORAZA_WAF=false \
+		-e ENABLE_RATE_LIMITER=true \
+		-e DEBUG=true \
         ${IMAGE} caddy validate -config /etc/caddy/Caddyfile
 
 test_no_upstreams:

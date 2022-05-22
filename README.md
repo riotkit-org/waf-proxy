@@ -18,6 +18,7 @@ Simple WAF reverse-proxy using Caddy and CORAZA WAF, contains few predefined but
 - Image is scanned for vulnerabilities on each release using Trivy Scanner
 - Developed purely in Golang, [even entrypoint script was written in Golang instead of Bash](container-files/opt/build/entrypoint/entrypoint.go)
 - Autonomous image, actively maintained by [Dependabot](https://github.com/dependabot) ;-)
+- Limiting requests rate to protect against DoS
 - (todo) Helm Chart for Kubernetes
 - (todo) Strict Pod Security Policy that should run on OpenShift
 
@@ -47,6 +48,8 @@ docker pull ghcr.io/riotkit-org/waf-proxy:{select-your-version}
 - `/etc/caddy/rules/riotit-org-basic`
 - `/etc/caddy/rules/wordpress`
 - `/etc/caddy/rules/owasp-crs`
+- `/etc/caddy/rules/custom.conf` (extra configuration inside `coraza_waf` block)
+- `/etc/caddy/custom-upstream.conf` (extra configuration outside `coraza_waf` block, but inside host block, before `reverse_proxy`, requires `ENABLE_CUSTOM_UPSTREAM_CONF=true`)
 
 To add specific rules mount a docker volume or Kubernetes ConfigMap at `/etc/caddy/rules/custom/rules.conf`
 
@@ -64,6 +67,17 @@ UPSTREAM_...: '...'
 # you can also still use it with 'false' with a custom template mounted under "/etc/caddy/Caddyfile.j2"
 OWN_CADDYFILE: false
 DEBUG: false  # enable extra verbosity, configuration printing to stdout
+ENABLE_CUSTOM_UPSTREAM_CONF: false
+
+# rate limiting - how many events are allowed in given time window?
+# docs: https://github.com/mholt/caddy-ratelimit
+ENABLE_RATE_LIMITER: false
+RATE_LIMIT_EVENTS: 30
+RATE_LIMIT_WINDOW: 5s
+
+# allows to disable CORAZA WAF at all together with all rules
+# helpful if wanting to use only other Caddy plugins
+ENABLE_CORAZA_WAF: true
 
 #
 # Wordpress specific rules
