@@ -22,6 +22,8 @@ Simple WAF reverse-proxy using Caddy and CORAZA WAF, contains few predefined but
 - (todo) Helm Chart for Kubernetes
 - (todo) Strict Pod Security Policy that should run on OpenShift
 
+Check our [WordPress deployment](https://github.com/riotkit-org/wordpress-hardened) which uses this waf-proxy on Kubernetes.
+
 
 Configuration reference
 -----------------------
