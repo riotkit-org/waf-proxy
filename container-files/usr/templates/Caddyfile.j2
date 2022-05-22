@@ -10,16 +10,7 @@ http://{{ upstream.Hostname }}:{{ CADDY_PORT }} {
     {%- if ENABLE_CORAZA_WAF %}
 	coraza_waf {
 	    {%- if ENABLE_RULE_WORDPRESS %}
-            #include /etc/caddy/rules/wordpress/rules.conf
-            #include /etc/caddy/rules/wordpress/shared/02-INITIALIZATION.conf
-            #include /etc/caddy/rules/wordpress/shared/03-BRUTEFORCE.conf
-            #include /etc/caddy/rules/wordpress/shared/04-EVENTS.conf
             include /etc/caddy/rules/wordpress/shared/crs-attacks.conf
-
-            {% if WP_HARDENED %}
-            #include /etc/caddy/rules/wordpress/shared/05-HARDENING.conf
-            {% endif %}
-
 	    {% endif -%}
 
         {%- if ENABLE_RULE_CORAZA_RECOMMENDED %}
@@ -32,6 +23,19 @@ http://{{ upstream.Hostname }}:{{ CADDY_PORT }} {
 
         {% if ENABLE_CRS %}
             include /etc/caddy/rules/owasp-crs/*.conf
+
+            {% if ENABLE_RULE_WORDPRESS %}
+            directives `
+                SecAction "id:900130,phase:1,nolog,pass,t:none,setvar:tx.crs_exclusions_wordpress=1
+            `
+            {% endif %}
+
+            {% if ENABLE_RULE_DRUPAL %}
+            directives `
+                SecAction "id:900130,phase:1,nolog,pass,t:none,setvar:tx.crs_exclusions_drupal=1
+            `
+            {% endif %}
+
         {% endif %}
 
         # mount your volume/configmap there
