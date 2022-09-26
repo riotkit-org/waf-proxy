@@ -3,7 +3,7 @@
 #
 # Hint: Bump Xcaddy there
 # ===========================================================================
-FROM caddy:2.5.1-builder-alpine as xcaddy
+FROM caddy:2.6.1-builder-alpine as xcaddy
 
 
 # ============================================================================================================
@@ -11,7 +11,7 @@ FROM caddy:2.5.1-builder-alpine as xcaddy
 #
 # Hint: Bump Caddy version there
 # ============================================================================================================
-FROM docker.io/caddy:2.5.1-alpine as caddy
+FROM docker.io/caddy:2.6.1-alpine as caddy
 RUN command -v caddy
 RUN caddy version | awk '{print $1}' > /caddy-version
 
